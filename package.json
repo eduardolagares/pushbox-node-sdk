@@ -1,6 +1,6 @@
 {
   "name": "pushbox-node-sdk",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Sdk node for pushbox",
   "main": "index.js",
   "scripts": {
@@ -26,5 +26,6 @@
   "homepage": "https://github.com/eduardolagares/pushbox-node-sdk#readme",
   "dependencies": {
     "axios": "^0.21.1"
-  }
+  },
+  "devDependencies": {}
 }

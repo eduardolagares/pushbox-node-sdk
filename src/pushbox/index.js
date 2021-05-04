@@ -11,6 +11,7 @@ const PUSHBOX_PROVIDER_LABEL = 'PUSHBOX_PROVIDER_LABEL'
 const PUSHBOX_SYSTEM_LABEL = 'PUSHBOX_SYSTEM_LABEL'
 const PUSHBOX_API_HOST = 'PUSHBOX_API_HOST'
 const PUSHBOX_API_KEY = 'PUSHBOX_API_KEY'
+const PUSHBOX_BADGE_NUMBER = 'PUSHBOX_BADGE_NUMBER'
 
 class PushboxClient {
     static async init(params) {
@@ -87,25 +88,34 @@ class PushboxClient {
 
     // PUSHBOX_DEVICE_ID
     static async setDeviceId(value) {
-        return this.setValue(PUSHBOX_DEVICE_ID, value)
+        return await this.setValue(PUSHBOX_DEVICE_ID, value)
     }
 
     static async getDeviceId() {
-        return this.getValue(PUSHBOX_DEVICE_ID);
+        return await this.getValue(PUSHBOX_DEVICE_ID);
     }
 
     // PUSHBOX_EXTERNAL_IDENTIFIER
     static async setExternalIdentifier(value) {
-        return this.setValue(PUSHBOX_EXTERNAL_IDENTIFIER, value)
+        return await this.setValue(PUSHBOX_EXTERNAL_IDENTIFIER, value)
     }
 
     static async getExternalidentifier() {
-        return this.getValue(PUSHBOX_EXTERNAL_IDENTIFIER);
+        return await this.getValue(PUSHBOX_EXTERNAL_IDENTIFIER);
+    }
+
+     // PUSHBOX_BADGE_NUMBER
+     static async setBadgeNumber(value) {
+        return await this.setValue(PUSHBOX_BADGE_NUMBER, value);
+    }
+
+    static async getBadgeNumber() {
+        return await this.getValue(PUSHBOX_BADGE_NUMBER);
     }
 
     // PUSHBOX_EXTRA_DATA
     static setExtraData(value) {
-        return this.setValue(PUSHBOX_EXTRA_DATA, JSON.stringify(value))
+        return await this.setValue(PUSHBOX_EXTRA_DATA, JSON.stringify(value))
     }
 
     static getExtraData() {
@@ -205,6 +215,17 @@ class PushboxClient {
         return await axiosInstance.get(`${await this.getApiHost()}/api/v1/devices/${deviceId}/subscriptions`).then(response => response.data);
     }
 
+    static async notifications() {
+        const deviceId = await this.getDeviceId();
+        
+        if(deviceId === null) {
+            throw 'Register this device before list notifications.';
+        }
+
+        const axiosInstance = await this.buildAxios();
+        return await axiosInstance.get(`${await this.getApiHost()}/api/v1/devices/${deviceId}/notifications`).then(response => response.data);
+    }
+
     static async topics(serachTerm) {
         const axiosInstance = await this.buildAxios();
         return await axiosInstance.get(`${await this.getApiHost()}/api/v1/topics`, {params: {search: serachTerm}}).then(response => response.data);
@@ -252,7 +273,7 @@ class PushboxClient {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'PushBox-Api-Key': this.getApiKey(),
+                'PushBox-Api-Key': await this.getApiKey(),
                 common: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
