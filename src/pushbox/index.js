@@ -273,7 +273,7 @@ class PushboxClient {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'PushBox-Api-Key': await this.getApiKey(),
+                'X-PushBox-Api-Key': await this.getApiKey(),
                 common: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -296,7 +296,7 @@ class PushboxClient {
         const deviceApiKey = await this.getDeviceApiKey();
 
         if(deviceApiKey !== null) {
-            config.headers['PushBox-Device-Api-Key'] = deviceApiKey
+            config.headers['X-PushBox-Device-Api-Key'] = deviceApiKey
         }
 
         return axios.create(config);
