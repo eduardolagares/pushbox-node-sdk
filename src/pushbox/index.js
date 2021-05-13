@@ -114,7 +114,7 @@ class PushboxClient {
     }
 
     // PUSHBOX_EXTRA_DATA
-    static setExtraData(value) {
+    static async setExtraData(value) {
         return await this.setValue(PUSHBOX_EXTRA_DATA, JSON.stringify(value))
     }
 
