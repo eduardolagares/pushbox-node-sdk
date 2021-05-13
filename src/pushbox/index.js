@@ -162,6 +162,8 @@ class PushboxClient {
 
             await this.setDeviceApiKey(syncResponse.api_key.toString());
             await this.setDeviceId(syncResponse.id.toString());
+            
+            await this.setBadgeNumber(syncResponse.badge_number.toString());
         
             return syncResponse;
         }
@@ -201,7 +203,10 @@ class PushboxClient {
 
         const axiosInstance = await this.buildAxios();
         
-        return await axiosInstance.get(`${await this.getApiHost()}/api/v1/devices/${deviceId}`).then(response => response.data);
+        return await axiosInstance.get(`${await this.getApiHost()}/api/v1/devices/${deviceId}`).then(response => {
+            this.setBadgeNumber(response.data.badge_number.toString());
+            return response.data
+        });
     }
 
     static async subscriptions() {
@@ -223,7 +228,11 @@ class PushboxClient {
         }
 
         const axiosInstance = await this.buildAxios();
-        return await axiosInstance.get(`${await this.getApiHost()}/api/v1/devices/${deviceId}/notifications`).then(response => response.data);
+        return await axiosInstance.get(`${await this.getApiHost()}/api/v1/devices/${deviceId}/notifications`).then(response => {
+            // update badge number
+            this.setBadgeNumber(response.data.meta.badge_number.toString());
+            return response.data
+        });
     }
 
     static async setNotificationAsRead(notificationId) {
