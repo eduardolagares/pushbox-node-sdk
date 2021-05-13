@@ -226,6 +226,17 @@ class PushboxClient {
         return await axiosInstance.get(`${await this.getApiHost()}/api/v1/devices/${deviceId}/notifications`).then(response => response.data);
     }
 
+    static async setNotificationAsRead(notificationId) {
+        const deviceId = await this.getDeviceId();
+        
+        if(deviceId === null) {
+            throw 'Register this device before list notifications.';
+        }
+
+        const axiosInstance = await this.buildAxios();
+        return await axiosInstance.post(`${await this.getApiHost()}/api/v1/devices/${deviceId}/notifications/${notificationId}/read`).then(response => response.data);
+    }
+
     static async topics(serachTerm) {
         const axiosInstance = await this.buildAxios();
         return await axiosInstance.get(`${await this.getApiHost()}/api/v1/topics`, {params: {search: serachTerm}}).then(response => response.data);
